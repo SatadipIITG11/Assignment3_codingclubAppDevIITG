@@ -1,16 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:movie/apis/api.dart';
+import 'package:movie/models/movie.dart';
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late Future<List<Movie>> trending;
+
+  @override
+  void initState() {
+    super.initState();
+
+    trending = Api().getTrendingMovies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          toolbarHeight:100,
+          toolbarHeight: 100,
           title: Image.asset(
             'lib/images/cinema.png',
             height: 200,
@@ -79,8 +94,8 @@ class MyApp extends StatelessWidget {
                   width: double.infinity,
                   height: 300,
                   child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    physics: BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      physics: BouncingScrollPhysics(),
                       itemCount: 10,
                       itemBuilder: (context, index) {
                         return Padding(
@@ -113,8 +128,8 @@ class MyApp extends StatelessWidget {
                   width: double.infinity,
                   height: 300,
                   child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    physics: BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      physics: BouncingScrollPhysics(),
                       itemCount: 10,
                       itemBuilder: (context, index) {
                         return Padding(
