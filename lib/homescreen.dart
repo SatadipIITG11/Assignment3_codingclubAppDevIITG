@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:movie/apis/api.dart';
 import 'package:movie/models/movie.dart';
+import 'package:movie/now_playing.dart';
+import 'package:movie/top_rated.dart';
+import 'package:movie/trending_slider.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -13,12 +15,16 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late Future<List<Movie>> trending;
+  late Future<List<Movie>> topRated;
+  late Future<List<Movie>> NowPlaying;
 
   @override
   void initState() {
     super.initState();
 
     trending = Api().getTrendingMovies();
+    topRated = Api().getTopRatedMovies();
+    NowPlaying=Api().getNowPlayingMovies();
   }
 
   @override
@@ -52,33 +58,29 @@ class _MyAppState extends State<MyApp> {
                   height: 20,
                 ),
 
+                // TrendingSlider(),
                 SizedBox(
-                  width: double.infinity,
-                  child: CarouselSlider.builder(
-                      //very interesting widget by flutter..
-                      itemCount: 5,
-                      options: CarouselOptions(
-                          height: 300,
-                          autoPlay: true,
-                          enlargeCenterPage: true,
-                          viewportFraction: 0.55,
-                          autoPlayCurve: Curves.fastOutSlowIn,
-                          pageSnapping: true),
-                      itemBuilder: (context, itemIndex, pageViewIndex) {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(5),
-                            child: Container(
-                              color: Colors.amber,
-                            ),
-                          ),
-                        );
+                  child: FutureBuilder(
+                      future: trending,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return Center(
+                            child: Text(snapshot.error.toString()),
+                          );
+                        } else if (snapshot.hasData) {
+                          return TrendingSlider(
+                            snapshot: snapshot,
+                          );
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
                       }),
                 ),
 
                 SizedBox(
-                  height: 20,
+                  height: 27,
                 ),
                 Text(
                   'Top Rated Movies',
@@ -89,30 +91,28 @@ class _MyAppState extends State<MyApp> {
                 SizedBox(
                   height: 20,
                 ),
-
                 SizedBox(
-                  width: double.infinity,
-                  height: 300,
-                  child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      physics: BouncingScrollPhysics(),
-                      itemCount: 10,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 5),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(5),
-                            child: Container(
-                              height: 200,
-                              width: 200,
-                              color: Colors.amber,
-                            ),
-                          ),
-                        );
+                  child: FutureBuilder(
+                      future: topRated,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return Center(
+                            child: Text(snapshot.error.toString()),
+                          );
+                        } else if (snapshot.hasData) {
+                          return TopRated(
+                            snapshot: snapshot
+                          );
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
                       }),
                 ),
+                
                 SizedBox(
-                  height: 20,
+                  height: 27,
                 ),
                 Text(
                   'Now Playing',
@@ -125,26 +125,29 @@ class _MyAppState extends State<MyApp> {
                 ),
 
                 SizedBox(
-                  width: double.infinity,
-                  height: 300,
-                  child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      physics: BouncingScrollPhysics(),
-                      itemCount: 10,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 5),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(5),
-                            child: Container(
-                              height: 200,
-                              width: 200,
-                              color: Colors.amber,
-                            ),
-                          ),
-                        );
+                  child: FutureBuilder(
+                      future: NowPlaying,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return Center(
+                            child: Text(snapshot.error.toString()),
+                          );
+                        } else if (snapshot.hasData) {
+                          return Nowplaying(
+                            snapshot: snapshot
+                          );
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
                       }),
                 ),
+                SizedBox(
+                  height: 5,
+                )
+
+                
               ],
             ),
           ),

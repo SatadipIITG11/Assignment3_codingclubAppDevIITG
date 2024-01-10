@@ -8,7 +8,7 @@ void main() {
         scaffoldBackgroundColor:Colors.black,
         // useMaterial3: true
       ),
-      home: MyApp(),
+      home: const MyApp(),
     )
   );
 }
